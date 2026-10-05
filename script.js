@@ -1,3 +1,4 @@
+alert("JavaScript is working!");
 // Get the form
 const form = document.getElementById("checkInForm");
 
