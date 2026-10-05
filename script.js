@@ -19,7 +19,7 @@ const celebration = document.getElementById("celebration");
 
 
 // Attendance goal
-const goal = 50;
+const goal = 3;
 
 
 // Starting attendance numbers
