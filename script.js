@@ -81,28 +81,29 @@ form.addEventListener("submit", function (e) {
     `Welcome, ${name}! You are checked in with ${teamName}.`;
 
 
-  // --------------------------------
-  // LEVELUP 1: CELEBRATION
-  // --------------------------------
+// --------------------------------
+// LEVELUP 1: CELEBRATION
+// --------------------------------
 
-  if (total >= goal) {
+if (total >= goal) {
 
-    let winningTeam = "";
+  let winningTeam = "";
 
-    if (water >= zero && water >= power) {
-      winningTeam = "Team Water Wise";
-    }
+  if (water >= zero && water >= power) {
+    winningTeam = "Team Water Wise";
+  }
 
-    if (zero > water && zero >= power) {
-      winningTeam = "Team Net Zero";
-    }
+  if (zero > water && zero >= power) {
+    winningTeam = "Team Net Zero";
+  }
 
-    if (power > water && power > zero) {
-      winningTeam = "Team Renewables";
-    }
+  if (power > water && power > zero) {
+    winningTeam = "Team Renewables";
+  }
 
-    greeting.textContent =
-      `🎉 The attendance goal has been reached! ${winningTeam} is winning!`;
+  celebration.textContent =
+    `🎉 The attendance goal has been reached! ${winningTeam} is winning!`;
+}
   }
 
 
@@ -117,22 +118,13 @@ form.addEventListener("submit", function (e) {
 
 
   // --------------------------------
-  // LEVELUP 3: ATTENDEE LIST
-  // --------------------------------
+// LEVELUP 3: ATTENDEE LIST
+// --------------------------------
 
-  attendees.push({
-    name: name,
-    team: teamName
-  });
+const attendee = document.createElement("li");
 
+attendee.textContent =
+  `${name} - ${teamName}`;
 
-  localStorage.setItem(
-    "attendees",
-    JSON.stringify(attendees)
-  );
-
-
-  // Reset the form
-  form.reset();
-
+attendeeList.appendChild(attendee);
 });
