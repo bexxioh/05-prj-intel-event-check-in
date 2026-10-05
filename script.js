@@ -1,4 +1,6 @@
 // Get all needed elements
+const attendeeList = document.getElementById("attendeeList");
+const celebration = document.getElementById("celebration");
 const form = document.getElementById("checkInForm");
 const nameInput = document.getElementById("attendeeName");
 const teamSelect = document.getElementById("teamSelect");
@@ -104,7 +106,6 @@ if (total >= goal) {
   celebration.textContent =
     `🎉 The attendance goal has been reached! ${winningTeam} is winning!`;
 }
-  }
 
 
   // --------------------------------
