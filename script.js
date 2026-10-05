@@ -1,6 +1,4 @@
-// Get all needed elements
-const attendeeList = document.getElementById("attendeeList");
-const celebration = document.getElementById("celebration");
+// Get all needed DOM elements
 const form = document.getElementById("checkInForm");
 const nameInput = document.getElementById("attendeeName");
 const teamSelect = document.getElementById("teamSelect");
@@ -14,42 +12,43 @@ const zeroCount = document.getElementById("zeroCount");
 const powerCount = document.getElementById("powerCount");
 
 
-// Attendance goal
-const goal = 50;
-
-
-// Attendance counters
+// Attendance counter
 let total = 0;
+
+
+// Team counters
 let water = 0;
 let zero = 0;
 let power = 0;
 
 
-// Attendee list
-let attendees = [];
+// Attendance goal
+const goal = 50;
 
 
-// Listen for form submission
-form.addEventListener("submit", function (e) {
+// Handle form submission
+form.addEventListener("submit", function (event) {
 
   // Stop the page from refreshing
-  e.preventDefault();
+  event.preventDefault();
 
 
-  // Get the name and team
+  // Get form values
   const name = nameInput.value;
   const team = teamSelect.value;
-
-  // Get the full team name
-  const teamName =
-    teamSelect.options[teamSelect.selectedIndex].text;
+  const teamName = teamSelect.selectedOptions[0].text;
 
 
   // Increase total attendance
   total = total + 1;
 
 
-  // Update the correct team
+  // Show updated total count
+  attendeeCount.textContent = total;
+
+
+  // Update the correct team's count
+
   if (team === "water") {
     water = water + 1;
     waterCount.textContent = water;
@@ -66,11 +65,7 @@ form.addEventListener("submit", function (e) {
   }
 
 
-  // Update total attendance on page
-  attendeeCount.textContent = total;
-
-
-  // Calculate progress percentage
+  // Calculate percentage of goal completed
   const percentage = (total / goal) * 100;
 
 
@@ -78,54 +73,12 @@ form.addEventListener("submit", function (e) {
   progressBar.style.width = `${percentage}%`;
 
 
-  // Show welcome message
+  // Show success message
   greeting.textContent =
     `Welcome, ${name}! You are checked in with ${teamName}.`;
 
 
-// --------------------------------
-// LEVELUP 1: CELEBRATION
-// --------------------------------
+  // Reset the form
+  form.reset();
 
-if (total >= goal) {
-
-  let winningTeam = "";
-
-  if (water >= zero && water >= power) {
-    winningTeam = "Team Water Wise";
-  }
-
-  if (zero > water && zero >= power) {
-    winningTeam = "Team Net Zero";
-  }
-
-  if (power > water && power > zero) {
-    winningTeam = "Team Renewables";
-  }
-
-  celebration.textContent =
-    `🎉 The attendance goal has been reached! ${winningTeam} is winning!`;
-}
-
-
-  // --------------------------------
-  // LEVELUP 2: SAVE PROGRESS
-  // --------------------------------
-
-  localStorage.setItem("total", total);
-  localStorage.setItem("water", water);
-  localStorage.setItem("zero", zero);
-  localStorage.setItem("power", power);
-
-
-  // --------------------------------
-// LEVELUP 3: ATTENDEE LIST
-// --------------------------------
-
-const attendee = document.createElement("li");
-
-attendee.textContent =
-  `${name} - ${teamName}`;
-
-attendeeList.appendChild(attendee);
 });
