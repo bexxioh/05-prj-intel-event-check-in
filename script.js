@@ -1,7 +1,7 @@
 // Get the form
 const form = document.getElementById("checkInForm");
 
-// Get the input and dropdown
+// Get the form inputs
 const nameInput = document.getElementById("attendeeName");
 const teamSelect = document.getElementById("teamSelect");
 
@@ -14,48 +14,23 @@ const waterCount = document.getElementById("waterCount");
 const zeroCount = document.getElementById("zeroCount");
 const powerCount = document.getElementById("powerCount");
 
+const attendeeList = document.getElementById("attendeeList");
+const celebration = document.getElementById("celebration");
+
 
 // Attendance goal
 const goal = 50;
 
 
-// Attendance counters
+// Starting attendance numbers
 let total = 0;
 let water = 0;
 let zero = 0;
 let power = 0;
 
 
-// Attendee list
+// List of attendees
 let attendees = [];
-
-
-// ------------------------------------
-// CREATE LEVELUP ELEMENTS
-// ------------------------------------
-
-// Create the celebration message
-const celebration = document.createElement("p");
-
-celebration.id = "celebration";
-
-document.querySelector(".container").appendChild(celebration);
-
-
-// Create the attendee list heading
-const attendeeHeading = document.createElement("h3");
-
-attendeeHeading.textContent = "Attendee List";
-
-document.querySelector(".container").appendChild(attendeeHeading);
-
-
-// Create the attendee list
-const attendeeList = document.createElement("ul");
-
-attendeeList.id = "attendeeList";
-
-document.querySelector(".container").appendChild(attendeeList);
 
 
 // ------------------------------------
@@ -73,21 +48,17 @@ if (savedTotal !== null) {
   total = Number(savedTotal);
 }
 
-
 if (savedWater !== null) {
   water = Number(savedWater);
 }
-
 
 if (savedZero !== null) {
   zero = Number(savedZero);
 }
 
-
 if (savedPower !== null) {
   power = Number(savedPower);
 }
-
 
 if (savedAttendees !== null) {
   attendees = JSON.parse(savedAttendees);
@@ -108,16 +79,14 @@ powerCount.textContent = power;
 
 
 // ------------------------------------
-// SHOW SAVED PROGRESS
+// UPDATE PROGRESS BAR
 // ------------------------------------
 
 let percentage = (total / goal) * 100;
 
-
 if (percentage > 100) {
   percentage = 100;
 }
-
 
 progressBar.style.width = `${percentage}%`;
 
@@ -138,16 +107,41 @@ for (let i = 0; i < attendees.length; i++) {
 
 
 // ------------------------------------
+// SHOW CELEBRATION IF ALREADY AT GOAL
+// ------------------------------------
+
+if (total >= goal) {
+
+  let winningTeam = "";
+
+  if (water >= zero && water >= power) {
+    winningTeam = "Team Water Wise";
+  }
+
+  if (zero > water && zero >= power) {
+    winningTeam = "Team Net Zero";
+  }
+
+  if (power > water && power > zero) {
+    winningTeam = "Team Renewables";
+  }
+
+  celebration.textContent =
+    `🎉 Congratulations! The attendance goal has been reached! ${winningTeam} is winning!`;
+}
+
+
+// ------------------------------------
 // LISTEN FOR FORM SUBMISSION
 // ------------------------------------
 
 form.addEventListener("submit", function (event) {
 
-  // Prevent the page from refreshing
+  // Stop the page from refreshing
   event.preventDefault();
 
 
-  // Get the name
+  // Get the attendee's name
   const name = nameInput.value;
 
 
@@ -161,18 +155,16 @@ form.addEventListener("submit", function (event) {
 
 
   // ------------------------------------
-  // INCREASE TOTAL ATTENDANCE
+  // INCREASE TOTAL
   // ------------------------------------
 
   total = total + 1;
 
-
-  // Show the new total
   attendeeCount.textContent = total;
 
 
   // ------------------------------------
-  // UPDATE TEAM COUNTER
+  // UPDATE TEAM COUNT
   // ------------------------------------
 
   if (team === "water") {
@@ -205,13 +197,10 @@ form.addEventListener("submit", function (event) {
 
   percentage = (total / goal) * 100;
 
-
   if (percentage > 100) {
     percentage = 100;
   }
 
-
-  // Update progress bar
   progressBar.style.width = `${percentage}%`;
 
 
@@ -224,7 +213,6 @@ form.addEventListener("submit", function (event) {
 
 
   // ------------------------------------
-  // LEVELUP 3
   // ADD ATTENDEE TO LIST
   // ------------------------------------
 
@@ -233,22 +221,18 @@ form.addEventListener("submit", function (event) {
     team: teamName
   };
 
-
   attendees.push(newAttendee);
 
 
   const attendeeItem = document.createElement("li");
 
-
   attendeeItem.textContent =
     `${name} - ${teamName}`;
-
 
   attendeeList.appendChild(attendeeItem);
 
 
   // ------------------------------------
-  // LEVELUP 2
   // SAVE PROGRESS
   // ------------------------------------
 
@@ -267,7 +251,6 @@ form.addEventListener("submit", function (event) {
 
 
   // ------------------------------------
-  // LEVELUP 1
   // CELEBRATION
   // ------------------------------------
 
@@ -275,20 +258,17 @@ form.addEventListener("submit", function (event) {
 
     let winningTeam = "";
 
-
     if (water >= zero && water >= power) {
-
       winningTeam = "Team Water Wise";
-
-    } else if (zero >= water && zero >= power) {
-
-      winningTeam = "Team Net Zero";
-
-    } else {
-
-      winningTeam = "Team Renewables";
     }
 
+    if (zero > water && zero >= power) {
+      winningTeam = "Team Net Zero";
+    }
+
+    if (power > water && power > zero) {
+      winningTeam = "Team Renewables";
+    }
 
     celebration.textContent =
       `🎉 Congratulations! The attendance goal has been reached! ${winningTeam} is winning!`;
