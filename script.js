@@ -1,8 +1,11 @@
-// Get all needed DOM elements
+// Get the form
 const form = document.getElementById("checkInForm");
+
+// Get the input and dropdown
 const nameInput = document.getElementById("attendeeName");
 const teamSelect = document.getElementById("teamSelect");
 
+// Get the page elements
 const greeting = document.getElementById("greeting");
 const attendeeCount = document.getElementById("attendeeCount");
 const progressBar = document.getElementById("progressBar");
@@ -11,75 +14,167 @@ const waterCount = document.getElementById("waterCount");
 const zeroCount = document.getElementById("zeroCount");
 const powerCount = document.getElementById("powerCount");
 
-const celebration = document.getElementById("celebration");
-const attendeeList = document.getElementById("attendeeList");
-
 
 // Attendance goal
 const goal = 50;
 
 
-// Get saved attendance numbers
-let total = Number(localStorage.getItem("total")) || 0;
-let water = Number(localStorage.getItem("water")) || 0;
-let zero = Number(localStorage.getItem("zero")) || 0;
-let power = Number(localStorage.getItem("power")) || 0;
+// Attendance counters
+let total = 0;
+let water = 0;
+let zero = 0;
+let power = 0;
 
 
-// Get saved attendee list
-let attendees = JSON.parse(localStorage.getItem("attendees")) || [];
+// Attendee list
+let attendees = [];
 
 
-// Show saved attendance numbers
+// ------------------------------------
+// CREATE LEVELUP ELEMENTS
+// ------------------------------------
+
+// Create the celebration message
+const celebration = document.createElement("p");
+
+celebration.id = "celebration";
+
+document.querySelector(".container").appendChild(celebration);
+
+
+// Create the attendee list heading
+const attendeeHeading = document.createElement("h3");
+
+attendeeHeading.textContent = "Attendee List";
+
+document.querySelector(".container").appendChild(attendeeHeading);
+
+
+// Create the attendee list
+const attendeeList = document.createElement("ul");
+
+attendeeList.id = "attendeeList";
+
+document.querySelector(".container").appendChild(attendeeList);
+
+
+// ------------------------------------
+// LOAD SAVED INFORMATION
+// ------------------------------------
+
+const savedTotal = localStorage.getItem("total");
+const savedWater = localStorage.getItem("water");
+const savedZero = localStorage.getItem("zero");
+const savedPower = localStorage.getItem("power");
+const savedAttendees = localStorage.getItem("attendees");
+
+
+if (savedTotal !== null) {
+  total = Number(savedTotal);
+}
+
+
+if (savedWater !== null) {
+  water = Number(savedWater);
+}
+
+
+if (savedZero !== null) {
+  zero = Number(savedZero);
+}
+
+
+if (savedPower !== null) {
+  power = Number(savedPower);
+}
+
+
+if (savedAttendees !== null) {
+  attendees = JSON.parse(savedAttendees);
+}
+
+
+// ------------------------------------
+// SHOW SAVED COUNTS
+// ------------------------------------
+
 attendeeCount.textContent = total;
+
 waterCount.textContent = water;
+
 zeroCount.textContent = zero;
+
 powerCount.textContent = power;
 
 
-// Show saved progress
-let savedPercentage = (total / goal) * 100;
+// ------------------------------------
+// SHOW SAVED PROGRESS
+// ------------------------------------
 
-if (savedPercentage > 100) {
-  savedPercentage = 100;
+let percentage = (total / goal) * 100;
+
+
+if (percentage > 100) {
+  percentage = 100;
 }
 
-progressBar.style.width = `${savedPercentage}%`;
+
+progressBar.style.width = `${percentage}%`;
 
 
-// Show saved attendees
+// ------------------------------------
+// SHOW SAVED ATTENDEES
+// ------------------------------------
+
 for (let i = 0; i < attendees.length; i++) {
 
-  const listItem = document.createElement("li");
+  const attendee = document.createElement("li");
 
-  listItem.textContent =
+  attendee.textContent =
     `${attendees[i].name} - ${attendees[i].team}`;
 
-  attendeeList.appendChild(listItem);
+  attendeeList.appendChild(attendee);
 }
 
 
-// Handle form submission
+// ------------------------------------
+// LISTEN FOR FORM SUBMISSION
+// ------------------------------------
+
 form.addEventListener("submit", function (event) {
 
+  // Prevent the page from refreshing
   event.preventDefault();
 
 
-  // Get form values
+  // Get the name
   const name = nameInput.value;
+
+
+  // Get the selected team
   const team = teamSelect.value;
-  const teamName = teamSelect.selectedOptions[0].text;
 
 
-  // Increase total attendance
+  // Get the full team name
+  const teamName =
+    teamSelect.options[teamSelect.selectedIndex].text;
+
+
+  // ------------------------------------
+  // INCREASE TOTAL ATTENDANCE
+  // ------------------------------------
+
   total = total + 1;
 
 
-  // Update total on page
+  // Show the new total
   attendeeCount.textContent = total;
 
 
-  // Update Team Water Wise
+  // ------------------------------------
+  // UPDATE TEAM COUNTER
+  // ------------------------------------
+
   if (team === "water") {
 
     water = water + 1;
@@ -88,7 +183,6 @@ form.addEventListener("submit", function (event) {
   }
 
 
-  // Update Team Net Zero
   if (team === "zero") {
 
     zero = zero + 1;
@@ -97,7 +191,6 @@ form.addEventListener("submit", function (event) {
   }
 
 
-  // Update Team Renewables
   if (team === "power") {
 
     power = power + 1;
@@ -106,11 +199,13 @@ form.addEventListener("submit", function (event) {
   }
 
 
-  // Calculate progress percentage
-  let percentage = (total / goal) * 100;
+  // ------------------------------------
+  // CALCULATE PROGRESS
+  // ------------------------------------
+
+  percentage = (total / goal) * 100;
 
 
-  // Do not let progress go over 100%
   if (percentage > 100) {
     percentage = 100;
   }
@@ -120,38 +215,49 @@ form.addEventListener("submit", function (event) {
   progressBar.style.width = `${percentage}%`;
 
 
-  // Show welcome message
+  // ------------------------------------
+  // WELCOME MESSAGE
+  // ------------------------------------
+
   greeting.textContent =
     `Welcome, ${name}! You are checked in with ${teamName}.`;
 
 
-  // -----------------------------
-  // LEVELUP: ATTENDEE LIST
-  // -----------------------------
+  // ------------------------------------
+  // LEVELUP 3
+  // ADD ATTENDEE TO LIST
+  // ------------------------------------
 
-  const attendee = {
+  const newAttendee = {
     name: name,
     team: teamName
   };
 
-  attendees.push(attendee);
+
+  attendees.push(newAttendee);
 
 
-  const listItem = document.createElement("li");
+  const attendeeItem = document.createElement("li");
 
-  listItem.textContent =
+
+  attendeeItem.textContent =
     `${name} - ${teamName}`;
 
-  attendeeList.appendChild(listItem);
+
+  attendeeList.appendChild(attendeeItem);
 
 
-  // -----------------------------
-  // LEVELUP: SAVE PROGRESS
-  // -----------------------------
+  // ------------------------------------
+  // LEVELUP 2
+  // SAVE PROGRESS
+  // ------------------------------------
 
   localStorage.setItem("total", total);
+
   localStorage.setItem("water", water);
+
   localStorage.setItem("zero", zero);
+
   localStorage.setItem("power", power);
 
   localStorage.setItem(
@@ -160,9 +266,10 @@ form.addEventListener("submit", function (event) {
   );
 
 
-  // -----------------------------
-  // LEVELUP: CELEBRATION
-  // -----------------------------
+  // ------------------------------------
+  // LEVELUP 1
+  // CELEBRATION
+  // ------------------------------------
 
   if (total >= goal) {
 
@@ -180,16 +287,18 @@ form.addEventListener("submit", function (event) {
     } else {
 
       winningTeam = "Team Renewables";
-
     }
 
 
     celebration.textContent =
-      `🎉 Congratulations! Attendance goal reached! ${winningTeam} wins!`;
+      `🎉 Congratulations! The attendance goal has been reached! ${winningTeam} is winning!`;
   }
 
 
-  // Reset form
+  // ------------------------------------
+  // RESET FORM
+  // ------------------------------------
+
   form.reset();
 
 });
